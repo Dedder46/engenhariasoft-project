@@ -5,6 +5,11 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\OpportunityController;
+
+Route::middleware(['auth', 'role:Aluno'])->group(function () {
+    Route::get('/oportunidades', [OpportunityController::class, 'index'])->name('oportunidades.index');
+});
 
 Route::middleware(['auth', 'role:Empresa'])->group(function () {
     Route::get('/empresa/dashboard', [DashboardController::class, 'empresaDashboard'])->name('empresa.dashboard');
@@ -36,7 +41,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-use App\Http\Controllers\OpportunityController;
+
 
 Route::middleware(['auth', 'role:Empresa'])->group(function () {
     Route::get('/oportunidades/create', [OpportunityController::class, 'create'])->name('oportunidades.create');

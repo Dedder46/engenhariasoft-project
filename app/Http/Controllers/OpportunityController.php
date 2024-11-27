@@ -14,10 +14,27 @@ class OpportunityController extends Controller
     {
         return view('oportunidades.create');
     }
-    public function index()
+
+    public function index(Request $request)
     {
-        $oportunidades = Opportunity::all(); // Ou aplicar filtros se necessário
-        return view('oportunidades.index', compact('oportunidades'));
+        // Capturar filtros da requisição
+        $filters = $request->only(['urgencia', 'localizacao', 'modo_trabalho']);
+
+        // Buscar oportunidades aplicando os filtros
+        $oportunidades = Opportunity::query()
+            ->when($filters['urgencia'] ?? null, function ($query, $urgencia) {
+                $query->where('urgencia', $urgencia);
+            })
+            ->when($filters['localizacao'] ?? null, function ($query, $localizacao) {
+                $query->where('localizacao', 'LIKE', '%' . $localizacao . '%');
+            })
+            ->when($filters['modo_trabalho'] ?? null, function ($query, $modo_trabalho) {
+                $query->where('modo_trabalho', $modo_trabalho);
+            })
+            ->get();
+
+        // Retornar a view com as oportunidades e os filtros aplicados
+        return view('oportunidades.index', compact('oportunidades', 'filters'));
     }
 
     // Processar o registro da oportunidade
