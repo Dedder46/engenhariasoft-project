@@ -6,6 +6,11 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OpportunityController;
+use App\Http\Controllers\ApplicationController;
+
+Route::middleware(['auth', 'role:Empresa'])->group(function () {
+    Route::get('/empresa/candidaturas', [ApplicationController::class, 'index'])->name('empresa.candidaturas');
+});
 
 Route::middleware(['auth', 'role:Aluno'])->group(function () {
     Route::get('/oportunidades', [OpportunityController::class, 'index'])->name('oportunidades.index');

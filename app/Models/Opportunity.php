@@ -21,5 +21,9 @@ class Opportunity extends Model
         'tipo_contrato',
         'urgencia',
     ];
+    public function candidaturas()
+{
+    return $this->hasMany(Application::class, 'oportunidade_id');
+}
 }
 
